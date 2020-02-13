@@ -5,6 +5,11 @@ from rest_framework.test import APITestCase
 
 class TestRegistrationEndpoint(APITestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.endpoint = '/api/v1/auth/registration/'
+
     def setUp(self):
         super().setUp()
         self.user_data = {
@@ -14,10 +19,12 @@ class TestRegistrationEndpoint(APITestCase):
             'last_name': 'Doe',
         }
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.endpoint = '/api/v1/auth/registration/'
+    def is_user_can_login(self, access_data):
+        endpoint = '/api/v1/auth/login/'
+        req = self.client.post(endpoint, access_data)
+        self.assertEqual(req.status_code, status.HTTP_200_OK)
+        self.assertIn('access', req.json())
+        self.assertIn('refresh', req.json())
 
     def test_create_user(self):
         req = self.client.post(self.endpoint, self.user_data)
@@ -26,6 +33,12 @@ class TestRegistrationEndpoint(APITestCase):
         self.assertNotEqual(
             get_user_model().objects.get(pk=1).password,
             self.user_data['password'])
+
+        access_data = {
+            'email': self.user_data['email'],
+            'password': self.user_data['password']
+        }
+        self.is_user_can_login(access_data)
 
     def test_create_duplicate_user(self):
         req = self.client.post(self.endpoint, self.user_data)

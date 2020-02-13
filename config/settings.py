@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from dotenv import load_dotenv
 
@@ -103,3 +104,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(
+        minutes=int(os.environ.get('ACCESS_TOKEN_LIFETIME', 5))),
+    'REFRESH_TOKEN_LIFETIME': timedelta(
+        days=int(os.environ.get('REFRESH_TOKEN_LIFETIME', 7))),
+    'SLIDING_TOKEN_LIFETIME': timedelta(
+        minutes=int(os.environ.get('SLIDING_TOKEN_LIFETIME', 5))),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(
+        days=int(os.environ.get('SLIDING_TOKEN_REFRESH_LIFETIME', 7))),
+}
