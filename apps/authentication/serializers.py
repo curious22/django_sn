@@ -3,6 +3,10 @@ from rest_framework import serializers
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration
+    Required fields: 'email', 'password', 'first_name', 'last_name'
+    """
     password = serializers.CharField(write_only=True)
 
     class Meta:
