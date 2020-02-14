@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def create_user():
@@ -11,6 +12,33 @@ def create_user():
         first_name='Jhon',
         last_name='Doe'
     )
+
+
+def get_tokens_for_user(user):
+    """Obtaining JWT token for user"""
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+
+class BaseTestClass(APITestCase):
+    """
+    Base test class which contains a user and JWT auth setup to make requests
+    Make requests through self.client (base user) to access protected resources
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.base_user = create_user()
+        cls.user_token = get_tokens_for_user(cls.base_user)
+
+    def setUp(self):
+        super().setUp()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.user_token["access"]}')
 
 
 class TestRegistrationEndpoint(APITestCase):
