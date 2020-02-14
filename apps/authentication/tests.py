@@ -3,6 +3,16 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
+def create_user():
+    """Shortcut for quick user creation"""
+    return get_user_model().objects.create_user(
+        email='test@user.com',
+        password='some password',
+        first_name='Jhon',
+        last_name='Doe'
+    )
+
+
 class TestRegistrationEndpoint(APITestCase):
     @classmethod
     def setUpClass(cls):
@@ -60,9 +70,7 @@ class TestAuthLogin(APITestCase):
 
     def setUp(self):
         super().setUp()
-        self.user = get_user_model().objects.create_user(
-            email='test@user.com',
-            password='some password')
+        self.user = create_user()
         self.user_cred = {
             'email': 'test@user.com',
             'password': 'some password',
@@ -91,9 +99,7 @@ class TestAuthTokenRefresh(APITestCase):
 
     def setUp(self):
         super().setUp()
-        self.user = get_user_model().objects.create_user(
-            email='test@user.com',
-            password='some password')
+        self.user = create_user()
         self.user_cred = {
             'email': 'test@user.com',
             'password': 'some password',
