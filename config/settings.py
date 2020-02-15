@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'apps.authentication',
+    'apps.like',
     'apps.user',
     'apps.post',
 ]
