@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 
 from apps.authentication.tests import BaseTestClass, create_user
 from .models import Post
-from .serializers import CreatePostSerializer, DetailPostSerializer
+from .serializers import DetailPostSerializer
 
 
 class TestPostResource(BaseTestClass):
@@ -52,3 +52,30 @@ class TestPostResource(BaseTestClass):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Post.objects.count(), 3)
         self.assertEqual(resp.json(), {'id': Post.objects.last().id})
+
+    def test_create_post_duplicate_title(self):
+        self.new_post['title'] = 'Test title 2'
+        resp = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            resp.json(),
+            {'title': ['post with this title already exists.']}
+        )
+
+    def test_create_post_without_text(self):
+        self.new_post['text'] = ''
+        resp = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            resp.json(),
+            {'text': ['This field may not be blank.']}
+        )
+
+    def test_create_post_without_title(self):
+        self.new_post['title'] = ''
+        resp = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            resp.json(),
+            {'title': ['This field may not be blank.']}
+        )
