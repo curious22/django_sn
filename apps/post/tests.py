@@ -79,3 +79,19 @@ class TestPostResource(BaseTestClass):
             resp.json(),
             {'title': ['This field may not be blank.']}
         )
+
+    def test_get_post_unauth(self):
+        anonimus = APIClient()
+        resp = anonimus.get(f'{self.endpoint}{self.post.id}/')
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_post_not_exists(self):
+        resp = self.client.get(f'{self.endpoint}999/')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_post_success(self):
+        resp = self.client.get(f'{self.endpoint}{self.post.id}/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        expected = DetailPostSerializer(
+            Post.objects.get(pk=self.post.pk)).data
+        self.assertEqual(resp.json(), expected)

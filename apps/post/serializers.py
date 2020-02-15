@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Post
 
-HUMAN_DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S%Z'
+HUMAN_DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S %Z'
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
