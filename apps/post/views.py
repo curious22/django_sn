@@ -3,8 +3,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from apps.post import serializers
 from .models import Post
-from .serializers import PostSerializer
 
 
 class PostResource(viewsets.ViewSet):
@@ -12,11 +12,11 @@ class PostResource(viewsets.ViewSet):
 
     def list(self, request):
         queryset = Post.objects.all()
-        serializer = PostSerializer(queryset, many=True)
+        serializer = serializers.DetailPostSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def create(self, request):
-        serializer = PostSerializer(data=request.data)
+        serializer = serializers.CreatePostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         post = serializer.save(author=request.user)
         return Response({'id': post.id}, status=status.HTTP_201_CREATED)
@@ -24,5 +24,5 @@ class PostResource(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         queryset = Post.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = PostSerializer(user)
+        serializer = serializers.DetailPostSerializer(user)
         return Response(serializer.data)
