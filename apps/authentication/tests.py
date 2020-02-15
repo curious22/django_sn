@@ -4,11 +4,11 @@ from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-def create_user():
+def create_user(email='test@user.com', password='123'):
     """Shortcut for quick user creation"""
     return get_user_model().objects.create_user(
-        email='test@user.com',
-        password='some password',
+        email=email,
+        password=password,
         first_name='Jhon',
         last_name='Doe'
     )
@@ -51,7 +51,7 @@ class TestRegistrationEndpoint(APITestCase):
         super().setUp()
         self.user_data = {
             'email': 'test@user.com',
-            'password': 'some password',
+            'password': '123',
             'first_name': 'Jhon',
             'last_name': 'Doe',
         }
@@ -101,7 +101,7 @@ class TestAuthLogin(APITestCase):
         self.user = create_user()
         self.user_cred = {
             'email': 'test@user.com',
-            'password': 'some password',
+            'password': '123',
         }
 
     def test_login_user_exists(self):
@@ -130,7 +130,7 @@ class TestAuthTokenRefresh(APITestCase):
         self.user = create_user()
         self.user_cred = {
             'email': 'test@user.com',
-            'password': 'some password',
+            'password': '123',
         }
 
     def test_token_refresh_success(self):
