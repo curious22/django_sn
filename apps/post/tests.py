@@ -95,3 +95,7 @@ class TestPostResource(BaseTestClass):
         expected = DetailPostSerializer(
             Post.objects.get(pk=self.post.pk)).data
         self.assertEqual(resp.json(), expected)
+
+    def test_update_post(self):
+        resp = self.client.post(f'{self.endpoint}{self.post.id}/')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
