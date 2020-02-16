@@ -87,6 +87,31 @@ def user_registration(user):
     return False
 
 
+def get_fake_post():
+    text = FAKE.text()
+    title = text.split('.')[0]
+    data = {
+        'title': title[:45],
+        'text': text
+    }
+    return data
+
+
+def create_post(user):
+    """
+    Create a post by user
+    Return id of created post
+    """
+    post = get_fake_post()
+    headers = {'authorization': f'Bearer {user.access}'}
+
+    resp = SESSION.post(API_MAPPER['create_post'], post, headers=headers)
+    if resp.status_code == 201:
+        title = post['title']
+        print(f'Post "{title}" has created by {user.email}')
+        return resp.json()['id']
+
+
 if __name__ == '__main__':
     if not os.path.exists(CONFIG_FILE):
         print('Config file does not exist. Create it before using a bot')
@@ -95,7 +120,8 @@ if __name__ == '__main__':
     config = get_config(CONFIG_FILE)
     validate_config(config)
     check_api(BASE_URL)
-    users = []
+    users = []  # users credential
+    posts = []  # ids of created posts
 
     # create users
     for _ in range(config['number_of_users']):
@@ -103,4 +129,12 @@ if __name__ == '__main__':
         if email:
             users.append(email)
 
-    print(users)
+    print()
+
+    # create posts
+    for user in users:
+        for post in range(config['max_posts_per_user']):
+            posts.append(create_post(user))
+        print()
+
+    print(posts)
