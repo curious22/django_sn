@@ -2,6 +2,7 @@ import json
 import os
 import sys
 from collections import namedtuple
+from random import choice
 
 import requests
 from faker import Faker
@@ -112,6 +113,20 @@ def create_post(user):
         return resp.json()['id']
 
 
+def like_post(user, post_id):
+    """
+    Like or unlike a post
+    (if post has already liked by the same user)
+    """
+    headers = {'authorization': f'Bearer {user.access}'}
+    resp = SESSION.post(
+        API_MAPPER['like'],
+        {'post': post_id},
+        headers=headers)
+    if resp.status_code in (200, 201):
+        print(resp.json()['detail'])
+
+
 if __name__ == '__main__':
     if not os.path.exists(CONFIG_FILE):
         print('Config file does not exist. Create it before using a bot')
@@ -123,18 +138,21 @@ if __name__ == '__main__':
     users = []  # users credential
     posts = []  # ids of created posts
 
-    # create users
+    print('Create users')
     for _ in range(config['number_of_users']):
         email = user_registration(get_fake_user())
         if email:
             users.append(email)
-
     print()
 
-    # create posts
+    print('Create posts')
     for user in users:
         for post in range(config['max_posts_per_user']):
             posts.append(create_post(user))
         print()
 
-    print(posts)
+    print('Like posts')
+    for user in users:
+        for _ in range(config['max_likes_per_user']):
+            like_post(user, choice(posts))
+        print()
