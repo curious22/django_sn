@@ -25,3 +25,4 @@ env.bak/
 venv.bak/
 
 .idea
+bot_config.json
