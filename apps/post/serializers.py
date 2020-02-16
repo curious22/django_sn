@@ -18,11 +18,18 @@ class CreatePostSerializer(serializers.ModelSerializer):
         exclude = ('author',)
 
 
+class LikeField(serializers.RelatedField):
+    """Custom relation field to return a user id from Like model"""
+    def to_representation(self, value):
+        return value.user.id
+
+
 class DetailPostSerializer(CreatePostSerializer):
     """
     Serializer for getting detail info about Post
     also include likes as a list of user ids (which have liked a post)
     """
+    likes = LikeField(many=True, read_only=True)
 
     class Meta:
         model = Post
