@@ -44,7 +44,7 @@ def validate_config(config):
             sys.exit(1)
 
 
-def check_api(url):
+def api_is_available(url):
     """Checks API availability"""
     try:
         resp = SESSION.get(url)
@@ -134,7 +134,9 @@ if __name__ == '__main__':
 
     config = get_config(CONFIG_FILE)
     validate_config(config)
-    check_api(BASE_URL)
+    if not api_is_available(BASE_URL):
+        sys.exit(1)
+
     users = []  # users credential
     posts = []  # ids of created posts
 
