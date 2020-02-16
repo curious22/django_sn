@@ -19,7 +19,11 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class DetailPostSerializer(CreatePostSerializer):
-    """Serializer for getting detail info about Post"""
+    """
+    Serializer for getting detail info about Post
+    also include likes as a list of user ids (which have liked a post)
+    """
+
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ('author', 'title', 'text', 'created', 'last_update', 'likes')

@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.authentication.tests import BaseTestClass, create_user
+from apps.like.models import Like
 from .models import Post
 from .serializers import DetailPostSerializer
 
@@ -28,6 +29,7 @@ class TestPostResource(BaseTestClass):
             'title': 'Test post 3',
             'text': 'New text'
         }
+        Like.objects.create(post=self.post, user=self.base_user)
 
     def test_get_all_posts_unauth(self):
         anonimus = APIClient()
