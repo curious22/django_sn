@@ -27,7 +27,7 @@ class LikeResource(ViewSet):
         if serializer.is_valid():
             like = serializer.save(user=request.user)
             return Response(
-                {'datail': f'Post "{like.post.title}" has liked by {like.user}'},
+                {'detail': f'Post "{like.post.title}" has liked by {like.user}'},
                 status=status.HTTP_201_CREATED
             )
 
@@ -35,6 +35,6 @@ class LikeResource(ViewSet):
         existed_like = Like.objects.filter(post=data['post'], user=request.user)
         existed_like.delete()
         return Response(
-            {'datail': f'Post {data["post"]} has unliked by {request.user}'},
+            {'detail': f'Post {data["post"]} has unliked by {request.user}'},
             status=status.HTTP_200_OK
         )

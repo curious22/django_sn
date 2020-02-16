@@ -31,7 +31,7 @@ class TestPostResource(BaseTestClass):
         self.assertEqual(Like.objects.count(), 1)
         self.assertEqual(
             resp.json(),
-            {'datail': 'Post "Test title" has liked by test@user.com'}
+            {'detail': 'Post "Test title" has liked by test@user.com'}
         )
 
     def test_unlike_success(self):
@@ -44,5 +44,5 @@ class TestPostResource(BaseTestClass):
         self.assertEqual(Like.objects.count(), 0)
         self.assertEqual(
             resp.json(),
-            {'datail': 'Post 1 has unliked by test@user.com'}
+            {'detail': 'Post 1 has unliked by test@user.com'}
         )
