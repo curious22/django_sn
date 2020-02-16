@@ -47,12 +47,10 @@ def validate_config(config):
 def api_is_available(url):
     """Checks API availability"""
     try:
-        resp = SESSION.get(url)
-        if resp.status_code != 200:
-            return False
+        SESSION.get(url)
     except exceptions.RequestException as err:
         print(f'API host has not available: {err}')
-        return False
+        sys.exit(1)
 
     return True
 
@@ -92,7 +90,7 @@ def get_fake_post():
     text = FAKE.text()
     title = text.split('.')[0]
     data = {
-        'title': title[:45],
+        'title': title[:45],  # max title length is 50
         'text': text
     }
     return data
@@ -134,8 +132,7 @@ if __name__ == '__main__':
 
     config = get_config(CONFIG_FILE)
     validate_config(config)
-    if not api_is_available(BASE_URL):
-        sys.exit(1)
+    api_is_available(BASE_URL)
 
     users = []  # users credential
     posts = []  # ids of created posts
