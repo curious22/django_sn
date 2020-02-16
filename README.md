@@ -18,3 +18,9 @@
 3. Apply migrations: `python manage.py migrate`
 4. Run tests: `python manage.py test`
 5. Start app: `python manage.py runserver`
+
+### Run a bot
+1. Deploy a project
+2. Create a **bot_config.json** (see bot_config.json.sample)
+3. Run API (_http://localhost:8000 expected)_: `python manage.py runserver`
+4. Run bot: `python bot.py`
